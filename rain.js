@@ -1,0 +1,7 @@
+function rainDrop() {
+
+    //sizing
+
+
+    //drawing
+}
