@@ -12,4 +12,5 @@ function draw() {
     background(210, 35, 70);
 
     flower();
+    rainDrop();
 }
