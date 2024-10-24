@@ -28,8 +28,3 @@ function drawPetal(petalColor) {
     endShape(CLOSE);
 }
 
-
-// Testing
-function mousePressed() {
-    console.log(mouseX, mouseY);
-}
