@@ -20,6 +20,7 @@ function setup() {
     midColor1 = color(50, 70, 100);
     petalColor1 = color(300, 80, 100);
     petalColor2 = color(200, 80, 100);
+    petalColor3 = color(20, 80, 100);
 
     volSenseSlider = createSlider(0, 200, volSense, slideStep);
 
@@ -34,6 +35,8 @@ function draw() {
     background(210, 35, 100); 
 
     let yOffset = 0;
+    let yOffset2 = 0;
+    let yOffset3 = 0;
 
     if (startAudio) {
         vol = mic.getLevel();
@@ -43,11 +46,15 @@ function draw() {
         volSense = volSenseSlider.value();
         normVol = vol * volSense;
 
-        yOffset = map(normVol, 0, 1, 0, -100);
+        yOffset = map(normVol, 0, 1, 0, -100) * 1;
+        yOffset2 = map(normVol, 0, 1, 0, -100) * .5;
+        yOffset3 = map(normVol, 0, 1, 0, -100) * .75;
     }
 
     flower(200, 200 + yOffset, 6, midColor1, petalColor1);
-    flower(400, 200 + yOffset, 6, midColor1, petalColor2); 
+    flower(400, 200 + yOffset2, 5, midColor1, petalColor2); 
+    flower(300, 200 + yOffset3, 7, midColor1, petalColor3);
+
 }
 
 function mousePressed() {

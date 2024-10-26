@@ -1,12 +1,6 @@
 function flower(x, y, numPetals, midColor, petalColor) {
     //Drawing stem of the flower
-    for (let i = 0; i < 10; i++) {
-        push();
-        translate(x, y);
-        rotate(PI / 2);
-        drawStem();
-        pop();
-    }
+    drawStem(x + 2, y + 17);
     
     // Drawing petals
     for (let i = 0; i < numPetals; i++) {
@@ -21,12 +15,17 @@ function flower(x, y, numPetals, midColor, petalColor) {
     fill(midColor);
 
     // Drawing the center of the flower
+    stroke(0);
+    strokeWeight(1);
     ellipse(x, y, 30, 30);
+
+    
 }
 
 function drawPetal(petalColor) {
     fill(petalColor);
     stroke(0); 
+    strokeWeight(1);
 
     beginShape();
     curveVertex(0, 0); // Control point
@@ -37,18 +36,23 @@ function drawPetal(petalColor) {
     endShape(CLOSE);
 }
 
-function drawStem() {
-    fill(120, 100, 100);
-    stroke(0);
-    strokeWeight(3);
-    //line(200, 200, 200, 300);
+function drawStem(x, y) {
+    noFill();
+    //fill(120, 100, 60); // No fill for the stem
+    stroke(120, 100, 90); // Set the stroke color for the stem
+    strokeWeight(8); // Set the stroke weight for the stem
 
     beginShape();
-    curveVertex(0, 0); // Control point
-    curveVertex(90, -20); // Start point
-    curveVertex(90, -40); // Control point
-    curveVertex(90, -90); // End point
-    curveVertex(90, 0); // Control point
-    endShape(CLOSE);
-
+    curveVertex(x, y); // Starting point at the base of the flower
+    curveVertex(x, y); // Control point
+    curveVertex(x + -5, y + 25); // Control point
+    curveVertex(x + 5, y + 50); // Control point
+    curveVertex(x + -8, y + 80); // Control point
+    curveVertex(x + 8, y + 110); // Control point
+    curveVertex(x + -10, y + 140); // Control point
+    curveVertex(x + 10, y + 170); // Control point
+    curveVertex(x + -10, y + 200);
+    curveVertex(x + 10, y + 230);
+    curveVertex(x + -10, y + 270);
+    endShape();
 }
