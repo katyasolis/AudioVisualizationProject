@@ -1,4 +1,13 @@
 function flower(x, y, numPetals, midColor, petalColor) {
+    //Drawing stem of the flower
+    for (let i = 0; i < 10; i++) {
+        push();
+        translate(x, y);
+        rotate(PI / 2);
+        drawStem();
+        pop();
+    }
+    
     // Drawing petals
     for (let i = 0; i < numPetals; i++) {
         push();
@@ -28,8 +37,18 @@ function drawPetal(petalColor) {
     endShape(CLOSE);
 }
 
+function drawStem() {
+    fill(120, 100, 100);
+    stroke(0);
+    strokeWeight(3);
+    //line(200, 200, 200, 300);
 
-// Testing
-function mousePressed() {
-    console.log(mouseX, mouseY);
+    beginShape();
+    curveVertex(0, 0); // Control point
+    curveVertex(90, -20); // Start point
+    curveVertex(90, -40); // Control point
+    curveVertex(90, -90); // End point
+    curveVertex(90, 0); // Control point
+    endShape(CLOSE);
+
 }

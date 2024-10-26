@@ -1,16 +1,17 @@
 let ratio = 1.6;
 let globeScale;
 
-let mic, amplitude, startAudio, volSenseSlider;
+let mic, fft, volSenseSlider;
 let vol = 1;
+let normVol;
 let volSense = 100;
 let slideStep = 10;
+let startAudio = false;
 
 let midColor1, petalColor1, petalColor2;
 
 function setup() {
     createCanvas(window.innerWidth, window.innerWidth / ratio);
-    noLoop();
     globeScale = min(width, height);
     colorMode(HSB);
     getAudioContext().suspend();
@@ -20,48 +21,41 @@ function setup() {
     petalColor1 = color(300, 80, 100);
     petalColor2 = color(200, 80, 100);
 
+    volSenseSlider = createSlider(0, 200, volSense, slideStep);
+
     //Audio Setup
     mic = new p5.AudioIn();
     mic.start();
-
-    amplitude = new p5.Amplitude();
-    amplitude.setInput(mic);
-
-    volSenseSlider = createSlider(0, 200, volSense, slideStep);
+    fft = new p5.FFT();
+    fft.setInput(mic);
 }
 
 function draw() {
     background(210, 35, 100); 
 
+    let yOffset = 0;
+
     if (startAudio) {
         vol = mic.getLevel();
+        //let spectrum = fft.analyze();
+        //let waveform = fft.waveform();
 
         volSense = volSenseSlider.value();
         normVol = vol * volSense;
 
-        Amplitude();
+        yOffset = map(normVol, 0, 1, 0, -100);
     }
 
-
-    flower(200, 200, 6, midColor1, petalColor1);
-    flower(400, 200, 6, midColor1, petalColor2);
-
-    //rainDrop();
- 
+    flower(200, 200 + yOffset, 6, midColor1, petalColor1);
+    flower(400, 200 + yOffset, 6, midColor1, petalColor2); 
 }
 
 function mousePressed() {
-    getAudioContext().resume();
+    getAudioContext().resume().then(() => {
     if(!startAudio){
-        mic = new p5.AudioIn();
-
         mic.start();
         startAudio = true;
+        loop();
     }
-}
-
-function Amplitude() {
-    let level = amplitude.getLevel();
-
-    let moveY = map(level, 0, 1, -50, 50);
+});
 }
