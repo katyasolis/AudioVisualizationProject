@@ -1,12 +1,19 @@
-function flower(x, y, numPetals, midColor, petalColor) {
+function flower(x, y, numPetals, midColor, petalColor, baseHue) {
     //Drawing stem of the flower
     drawStem(x + 2, y + 17);
+
+    // Extract the HSB values from petalColor
+    let baseHueValue = hue(petalColor);
+    let baseSaturation = saturation(petalColor);
+    let baseBrightness = brightness(petalColor);
     
     // Drawing petals
     for (let i = 0; i < numPetals; i++) {
         push();
         translate(x, y);
         rotate(TWO_PI * i / numPetals);
+        let petalHue = (baseHueValue + map(normVol, 0, 1, -10, 10) + random(-5, 5)) % 360;
+        let petalColor = color(petalHue, baseSaturation, baseBrightness);
         drawPetal(petalColor);
         pop();
     }
