@@ -46,8 +46,7 @@ function draw() {
     flower(200, 200, 6, midColor1, petalColor1);
     flower(400, 200, 6, midColor1, petalColor2);
 
-    //rainDrop();
- 
+    rainDrop(width / 2, 0, 20, 40);
 }
 
 function mousePressed() {
