@@ -10,6 +10,9 @@ let startAudio = false;
 
 let midColor1, petalColor1, petalColor2;
 
+let raindrops = [];
+let numRaindrops = 50;
+
 function setup() {
     createCanvas(window.innerWidth, window.innerWidth / ratio);
     globeScale = min(width, height);
@@ -28,6 +31,10 @@ function setup() {
     mic.start();
     fft = new p5.FFT();
     fft.setInput(mic);
+
+    for (let i = 0; i < numRaindrops; i++) {
+        raindrops.push(new Raindrop(random(width), random(height), 20, 40));
+    }
 }
 
 function draw() {
@@ -46,13 +53,16 @@ function draw() {
 
         floweryOffset = map(normVol, 0, 1, 0, -100);
 
-        rainDropyOffset = map(normVol, 0, 1, 0, height);
+        rainDropyOffset = map(normVol, 0, 1, 0, 5);
     }
 
     flower(200, 200 + floweryOffset, 6, midColor1, petalColor1);
     flower(400, 200 + floweryOffset, 6, midColor1, petalColor2); 
 
-    rainDrop(width / 2, rainDropyOffset, 20, 40);
+    for (let raindrop of raindrops) {
+        raindrop.update(rainDropyOffset);
+        raindrop.display();
+    }
 }
 
 function mousePressed() {
