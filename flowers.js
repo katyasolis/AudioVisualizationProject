@@ -27,9 +27,3 @@ function drawPetal(petalColor) {
     curveVertex(0, 0); // Control point
     endShape(CLOSE);
 }
-
-
-// Testing
-function mousePressed() {
-    console.log(mouseX, mouseY);
-}
