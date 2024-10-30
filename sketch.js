@@ -8,8 +8,11 @@ let volSense = 100;
 let slideStep = 10;
 let startAudio = false;
 
-let midColor1, petalColor1, petalColor2;
+let midColor1, midColor2, petalColor1, petalColor2, petalColor3, stemColor1;
 let baseHue1, baseHue2, baseHue3;
+
+let raindrops = [];
+let numRaindrops = 50;
 
 function setup() {
     createCanvas(window.innerWidth, window.innerWidth / ratio);
@@ -18,10 +21,12 @@ function setup() {
     getAudioContext().suspend();
 
     //flower colors
-    midColor1 = color(46, 72, 100);
-    petalColor1 = color(347, 72, 93);
-    petalColor2 = color(177, 91, 48);
-    petalColor3 = color(316, 97, 44);
+    midColor1 = color(50, 70, 100);
+    midColor2 = color(35, 70, 100);
+    petalColor1 = color(300, 80, 100);
+    petalColor2 = color(200, 80, 100);
+    petalColor3 = color(100, 80, 100);
+    stemColor1 = color(120, 100, 60);
 
     volSenseSlider = createSlider(0, 200, volSense, slideStep);
 
@@ -39,6 +44,8 @@ function draw() {
     let yOffset2 = 0;
     let yOffset3 = 0;
 
+    let rainDropyOffset = 0;
+
     if (startAudio) {
         vol = mic.getLevel();
         //let spectrum = fft.analyze();
@@ -47,16 +54,16 @@ function draw() {
         volSense = volSenseSlider.value();
         normVol = vol * volSense;
 
-        yOffset = map(normVol, 0, 1, 0, -50) * .375;
-        yOffset2 = map(normVol, 0, 1, 0, -50) * .475;
-        yOffset3 = map(normVol, 0, 1, 0, -50) * .575;
+        yOffset = map(normVol, 0, 1, 0, -50) * .175;
+        yOffset2 = map(normVol, 0, 1, 0, -50) * .275;
+        yOffset3 = map(normVol, 0, 1, 0, -50) * .375;
 
         //Constraint flowers to not go past the top of the screen
-        yOffset = constrain(yOffset, -200, 0);
-        yOffset2 = constrain(yOffset2, -200, 0);
-        yOffset3 = constrain(yOffset3, -200, 0);
+        yOffset = constrain(yOffset, -window.innerHeight + 10, 0);
+        yOffset2 = constrain(yOffset2, -window.innerHeight + 10, 0);
+        yOffset3 = constrain(yOffset3, -window.innerHeight + 10, 0);
 
-        baseHue1 = hue(petalColor1);
+       /* baseHue1 = hue(petalColor1);
         baseHue2 = hue(petalColor2);
         baseHue3 = hue(petalColor3);
 
@@ -69,12 +76,28 @@ function draw() {
         /*petalColor1 = color(baseHue1, 100, 100);
         petalColor2 = color(baseHue2, 100, 100);
         petalColor3 = color(baseHue3, 100, 100);*/
+
+        rainDropyOffset = map(normVol, 0, 1, 0, 5);
     }
 
-    flower(200, 300 + yOffset, 6, midColor1, petalColor1, baseHue1);
-    //flower(400, 300 + yOffset2, 5, midColor1, petalColor2, baseHue2); 
-    flower(300, 300 + yOffset3, 7, midColor1, petalColor3, baseHue3);
-    //flower(100, 300 + yOffset, 5, midColor1, petalColor1, baseHue1);
+    // Draw the flowers
+    flower(100, (window.innerHeight + 75) + yOffset, 250, 6, midColor1, petalColor1, stemColor1);
+    flower(200, (window.innerHeight + 100) + yOffset, 100, 6, midColor1, petalColor1, stemColor1);
+    flower(300, (window.innerHeight + 25) + yOffset3, 150, 6, midColor2, petalColor3, stemColor1);
+    flower(400, (window.innerHeight + 50) + yOffset2, 200, 6, midColor2, petalColor2, stemColor1); 
+    flower(600, (window.innerHeight + 25) + yOffset3, 150, 6, midColor1, petalColor3, stemColor1);
+    flower(800, (window.innerHeight + 75) + yOffset, 250, 6, midColor2, petalColor1, stemColor1);
+    flower(900, (window.innerHeight + 100) + yOffset, 100, 6, midColor2, petalColor1, stemColor1);
+    flower(1000, (window.innerHeight + 50) + yOffset2, 150, 6, midColor1, petalColor2, stemColor1);
+    flower(1050, (window.innerHeight + 25) + yOffset3, 200, 6, midColor1, petalColor3, stemColor1);
+    flower(1200, (window.innerHeight + 25) + yOffset3, 200, 6, midColor2, petalColor3, stemColor1);
+    flower(1300, (window.innerHeight + 75) + yOffset, 100, 6, midColor1, petalColor1, stemColor1);
+
+
+    for (let raindrop of raindrops) {
+        raindrop.update(rainDropyOffset);
+        raindrop.display();
+    }
 
 }
 
