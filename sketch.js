@@ -48,8 +48,27 @@ function draw() {
 
     if (startAudio) {
         vol = mic.getLevel();
-        //let spectrum = fft.analyze();
+        let spectrum = fft.analyze();
         //let waveform = fft.waveform();
+
+        // average the frequency spectrum to get a single value
+        let avgFreq = 0;
+        for (let i = 0; i < spectrum.length; i++) {
+            avgFreq += spectrum[i];
+        }
+
+        avgFreq /= spectrum.length;
+
+        // Map the average frequency value to a hue value
+        let hueValue = map(avgFreq, 0, 255, 0, 360);
+
+        // Create a gradient background based on the frequency
+        for (let y = 0; y < height; y++) {
+            let inter = map(y, 0, height, 0, 1);
+            let c = lerpColor(color(hueValue, 100, 100), color((hueValue + 180) % 360, 100, 100), inter);
+            stroke(c);
+            line(0, y, width, y);
+        }
 
         volSense = volSenseSlider.value();
         normVol = vol * volSense;
@@ -62,20 +81,6 @@ function draw() {
         yOffset = constrain(yOffset, -window.innerHeight + 10, 0);
         yOffset2 = constrain(yOffset2, -window.innerHeight + 10, 0);
         yOffset3 = constrain(yOffset3, -window.innerHeight + 10, 0);
-
-       /* baseHue1 = hue(petalColor1);
-        baseHue2 = hue(petalColor2);
-        baseHue3 = hue(petalColor3);
-
-        // Adjust the hue value based on the sound input
-        baseHue1 = (baseHue1 + map(normVol, 0, 1, -10, 10)) % 50;
-        baseHue2 = (baseHue2 + map(normVol, 0, 1, -10, 10)) % 50;
-        baseHue3 = (baseHue3 + map(normVol, 0, 1, -10, 10)) % 50;
-
-        // Set the petal colors based on the base hue value
-        /*petalColor1 = color(baseHue1, 100, 100);
-        petalColor2 = color(baseHue2, 100, 100);
-        petalColor3 = color(baseHue3, 100, 100);*/
 
         rainDropyOffset = map(normVol, 0, 1, 0, 5);
     }
