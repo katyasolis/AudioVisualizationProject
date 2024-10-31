@@ -1,7 +1,7 @@
 let ratio = 1.6;
 let globeScale;
 
-let mic, fft, volSenseSlider;
+let mic, fft, volSenseSlider, numRaindropsSlider;
 let vol = 0.25;
 let normVol;
 let volSense = 100;
@@ -21,9 +21,6 @@ function setup() {
     colorMode(HSB);
     getAudioContext().suspend();
 
-    // Move the canvas down by 50 pixels
-    canvas.position(0, 50);
-
     // Set flower colors
     midColor1 = color(50, 70, 100);
     midColor2 = color(35, 70, 100);
@@ -32,10 +29,19 @@ function setup() {
     petalColor3 = color(100, 80, 100);
     stemColor1 = color(120, 100, 60);
 
+    // Volume Sensitivity Slider for flowers & background
     volSenseSlider = createSlider(0, 200, volSense, slideStep);
     volSenseSlider.position(10, 10);
     volSenseSlider.style('width', '400px');
     volSenseSlider.style('height', '20px');
+
+    // sensitvity slider for # of raindrops
+    numRaindropsSlider = createSlider(10, 200, numRaindrops, slideStep);
+    numRaindropsSlider.position(10, 50); // Position the slider below the volume sensitivity slider
+    numRaindropsSlider.style('width', '400px');
+    numRaindropsSlider.style('height', '20px');
+    numRaindropsSlider.class('slider-raindrop');
+
 
     // Audio Setup
     mic = new p5.AudioIn();
@@ -94,6 +100,7 @@ function draw() {
         }
 
         volSense = volSenseSlider.value();
+        let targetNumRaindrops = numRaindropsSlider.value();
         normVol = vol * volSense;
 
         // Calculate yOffsets based on volume
@@ -109,6 +116,20 @@ function draw() {
         yOffset4 = constrain(yOffset4, -window.innerHeight + 10, 0);
 
         rainDropyOffset = map(normVol, 0, 1, 0, 5);
+
+          // Adjust the number of raindrops based on the slider value
+        if (raindrops.length < targetNumRaindrops) {
+            for (let i = raindrops.length; i < targetNumRaindrops; i++) {
+                raindrops.push(new Raindrop(random(width), random(height), 20, 40, random(1, 5)));
+            }
+        } else if (raindrops.length > targetNumRaindrops) {
+            raindrops.splice(targetNumRaindrops);
+        }
+
+        for (let raindrop of raindrops) {
+            raindrop.update(rainDropyOffset);
+            raindrop.display();
+        }
 
         // Adjust base hues for petal colors based on volume
         baseHue1 = (hue(petalColor1) + map(normVol, 0, 1, -10, 10)) % 360;

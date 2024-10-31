@@ -1,0 +1,29 @@
+/* Custom CSS for the slider handle */
+.slider-raindrop::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 40px;
+    background: radial-gradient(circle at 50% 30%, #00f, #00a);
+    border-radius: 50% 50% 50% 50%;
+    cursor: pointer;
+    border: none; /* Remove any default border */
+}
+
+.slider-raindrop::-moz-range-thumb {
+    width: 20px;
+    height: 40px;
+    background: radial-gradient(circle at 50% 30%, #00f, #00a);
+    border-radius: 50% 50% 50% 50%;
+    cursor: pointer;
+    border: none; /* Remove any default border */
+}
+
+.slider-raindrop::-ms-thumb {
+    width: 20px;
+    height: 40px;
+    background: radial-gradient(circle at 50% 30%, #00f, #00a);
+    border-radius: 50% 50% 50% 50%;
+    cursor: pointer;
+    border: none; /* Remove any default border */
+}

@@ -23,10 +23,10 @@ class Raindrop {
 
     display() {
         noFill();
-        fill(210, 100, 100, this.alpha); // Set fill color with alpha
+        fill(210, 50, 100, this.alpha); // Set fill color with alpha
         noStroke();
         stroke('black'); // Set stroke color
-        strokeWeight(2); // Set stroke weight
+        strokeWeight(1); // Set stroke weight
 
         beginShape();
         vertex(this.x, this.y);
