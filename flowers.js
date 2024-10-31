@@ -17,16 +17,15 @@ function flower(x, y, size, numPetals, midColor, petalColor, stemColor) {
         drawPetal(petalColor, size);
         pop();
     }
-
-    // Set the fill color for the ellipse
-    fill(midColor);
-
-    // Drawing the center of the flower
-    stroke(0);
-    strokeWeight(1);
-    ellipse(x, y, size * 0.3, size * 0.3);
-
     
+     // Set the fill color for the ellipse
+     fill(midColor);
+
+     // Drawing the center of the flower
+     stroke(0);
+     strokeWeight(1);
+     ellipse(x, y, size * 0.3, size * 0.3); // Adjust the size of the center
+ 
 }
 
 function drawPetal(petalColor, size) {
