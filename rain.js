@@ -1,21 +1,29 @@
 class Raindrop {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, speed) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.speed = speed; // Add a speed property
+        this.alpha = 255; // Add an alpha property for transparency
+        this.oscillationSpeed = random(0.05, 0.2); // Random speed for oscillation
+        this.oscillationOffset = random(TWO_PI); // Random offset for oscillation
     }
 
     update(yOffset) {
-        this.y += yOffset;
+        this.y += this.speed + yOffset; // Use the speed property
+        this.alpha = 128 + 127 * sin(this.oscillationSpeed * frameCount + this.oscillationOffset); // Oscillate alpha
         if (this.y > height) {
             this.y = 0; // Reset to the top if it goes off the bottom
+            this.x = random(width); // Randomize the x position when resetting
+            this.oscillationSpeed = random(0.05, 0.2); // Random speed for oscillation
+            this.oscillationOffset = random(TWO_PI); // Random offset for oscillation
         }
     }
 
     display() {
         noFill();
-        fill(210, 100, 100); // Set fill color
+        fill(210, 100, 100, this.alpha); // Set fill color with alpha
         noStroke();
         stroke('black'); // Set stroke color
         strokeWeight(2); // Set stroke weight
