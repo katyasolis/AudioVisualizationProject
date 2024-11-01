@@ -2,13 +2,14 @@ let ratio = 1.6;
 let globeScale;
 
 let mic, fft, volSenseSlider;
-let vol = 0.25;
+let vol = .25;
 let normVol;
 let volSense = 100;
 let slideStep = 10;
 let startAudio = false;
 
 let midColor1, midColor2, petalColor1, petalColor2, petalColor3, stemColor1;
+let canColor1, flameColor1;
 let baseHue1, baseHue2, baseHue3;
 let lowFreqHue, highFreqHue;
 
@@ -21,9 +22,6 @@ function setup() {
     colorMode(HSB);
     getAudioContext().suspend();
 
-    // Move the canvas down by 50 pixels
-    canvas.position(0, 50);
-
     // Set flower colors
     midColor1 = color(50, 70, 100);
     midColor2 = color(35, 70, 100);
@@ -31,6 +29,11 @@ function setup() {
     petalColor2 = color(200, 80, 100);
     petalColor3 = color(100, 80, 100);
     stemColor1 = color(120, 100, 60);
+
+    //candle color
+    canColor1 = color(45, 25, 100);
+    flameColor1 = color(25, 100, 100);
+    
 
     volSenseSlider = createSlider(0, 200, volSense, slideStep);
     volSenseSlider.position(10, 10);
@@ -121,7 +124,7 @@ function draw() {
         petalColor3 = color(baseHue3, 100, 100);
     }
 
-    // Draw flowers at different positions with updated colors and offsets
+    // Draw flowers
     flower(100, (window.innerHeight + 75) + yOffset, 250, 6, midColor1, petalColor1, stemColor1);
     flower(200, (window.innerHeight + 100) + yOffset, 100, 8, midColor1, petalColor1, stemColor1);
     flower(300, (window.innerHeight + 25) + yOffset3, 150, 6, midColor2, petalColor3, stemColor1);
@@ -130,9 +133,12 @@ function draw() {
     flower(800, (window.innerHeight + 75) + yOffset, 250, 7, midColor2, petalColor1, stemColor1);
     flower(900, (window.innerHeight + 100) + yOffset, 100, 6, midColor2, petalColor1, stemColor1);
     flower(1000, (window.innerHeight + 50) + yOffset2, 150, 6, midColor1, petalColor2, stemColor1);
-    flower(1050, (window.innerHeight + 25) + yOffset3, 200, 4, midColor1, petalColor3, stemColor1);
+    flower(1050, (window.innerHeight + 25) + yOffset4, 200, 4, midColor1, petalColor3, stemColor1);
     flower(1200, (window.innerHeight + 25) + yOffset3, 200, 6, midColor2, petalColor3, stemColor1);
     flower(1300, (window.innerHeight + 75) + yOffset, 100, 9, midColor1, petalColor1, stemColor1);
+
+    //Draw candles
+    candle(200, window.innerHeight, 100, canColor1, flameColor1);
 
     // Update and display raindrops
     for (let raindrop of raindrops) {
