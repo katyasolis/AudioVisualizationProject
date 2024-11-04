@@ -1,8 +1,8 @@
-function candle(x, y, size, color, flameColor) {
+function candle(x, y, size, flameHeight, color, flameColor) {
     let w = size; 
     let h = size * 2;
     canBase(x, y, w, h, color);
-    canFlame(x, y - h/5, w / 2, flameColor);
+    canFlame(x, y - h/5, w / 2, flameHeight, flameColor);
 
 }
 
@@ -23,22 +23,22 @@ function canBase(x, y, w, h, color) {
     arc(x, y + h, w, w / 5, 0, PI);
 }
 
-function canFlame(x, y, size, flameColor) {
+function canFlame(x, y, size, flameHeight, flameColor) {
     // Set the shadow properties for the glow effect
-    drawingContext.shadowBlur = size * 0.1;
+    drawingContext.shadowBlur = flameHeight * 0.5;
     drawingContext.shadowColor = flameColor;
     drawingContext.shadowOffsetX = 0;
     drawingContext.shadowOffsetY = 0;
 
-    fill(flameColor); // Set fill color for the flame (orange)
-    stroke(25, 100, 75); // Set stroke color for the flame (darker orange)
+    fill(flameColor); // Set fill color for the flame
+    stroke(25, 100, 75); // Set stroke color for the flame (dark orange)
     strokeWeight(size * 0.02);
 
 
     beginShape();
     vertex(x, y); // Bottom point of the teardrop
-    bezierVertex(x - size / 2, y + size, x + size / 2, y + size, x, y); // Left and right control points
-    bezierVertex(x - size / 4, y + size / 2, x + size / 4, y + size / 2, x, y); // Inner control points for a smoother shape
+    bezierVertex(x - size / 2, (y + size * flameHeight) + flameHeight, x + size / 2, (y + size * flameHeight) + flameHeight, x, y); // Left and right control points
+    bezierVertex(x - size / 4, (y + size / 2 * flameHeight) + flameHeight, x + size / 4, (y + size / 2 * flameHeight) + flameHeight, x, y); // Inner control points for a smoother shape
     endShape(CLOSE);
 
     // Reset the shadow properties to avoid affecting other drawings
