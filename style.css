@@ -1,3 +1,13 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrollbars */
+}
+
+canvas {
+    display: block; /* Remove default inline-block spacing */
+}
+
 /* Custom CSS for the slider handle */
 .slider-raindrop::-webkit-slider-thumb {
     -webkit-appearance: none;
