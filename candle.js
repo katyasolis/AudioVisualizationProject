@@ -4,6 +4,11 @@ function candle(x, y, size, flameHeight, color, flameColor) {
     canBase(x, y, w, h, color);
     canFlame(x, y - h/5, w / 2, flameHeight, flameColor);
 
+    // Trigger explosion when the interval switches
+    if (millis() - lastSwitchTime > switchInterval - 1000) {
+        particleSystem.addParticle(x, y - h / 5, size, flameColor);
+    }
+
 }
 
 function canBase(x, y, w, h, color) {

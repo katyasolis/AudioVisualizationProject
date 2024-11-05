@@ -1,3 +1,58 @@
+class Particle {
+    constructor(x, y, size, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = random(-25, 25);
+        this.vy = random(-25, 25);
+        this.alpha = 255;
+        this.size = size;
+        this.color = color;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 25;
+    }
+
+    display() {
+        noStroke();
+        fill(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.alpha);
+        ellipse(this.x, this.y, this.size / 20);
+    }
+
+    isFinished() {
+        return this.alpha <= 0;
+    }
+}
+
+class ParticleSystem {
+    constructor() {
+        this.particles = [];
+    }
+
+    addParticle(x, y, size, color) {
+        for (let i = 0; i < 100; i++) {
+            this.particles.push(new Particle(x, y, size, color));
+        }
+    }
+
+    update() {
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            this.particles[i].update();
+            if (this.particles[i].isFinished()) {
+                this.particles.splice(i, 1);
+            }
+        }
+    }
+
+    display() {
+        for (let particle of this.particles) {
+            particle.display();
+        }
+    }
+}
+
 function flower(x, y, size, numPetals, midColor, petalColor, stemColor) {
     //Drawing stem of the flower
     drawStem(x + 2, y + 17, size, stemColor);
@@ -26,6 +81,10 @@ function flower(x, y, size, numPetals, midColor, petalColor, stemColor) {
      strokeWeight(1);
      ellipse(x, y, size * 0.3, size * 0.3); // Adjust the size of the center
  
+     // Trigger explosion at the end of the interval
+    if (millis() - lastSwitchTime > switchInterval - 1000) {
+        particleSystem.addParticle(x, y, size, petalColor);
+    }
 }
 
 function drawPetal(petalColor, size) {
