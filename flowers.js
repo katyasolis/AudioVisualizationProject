@@ -54,7 +54,7 @@ class ParticleSystem {
 }
 
 function flower(x, y, size, numPetals, midColor, petalColor, stemColor) {
-    // Drawing stem of the flower
+    //Drawing stem of the flower
     drawStem(x + 2, y + 17, size, stemColor);
 
     // Extract the HSB values from petalColor
@@ -73,15 +73,15 @@ function flower(x, y, size, numPetals, midColor, petalColor, stemColor) {
         pop();
     }
     
-    // Set the fill color for the ellipse
-    fill(midColor);
+     // Set the fill color for the ellipse
+     fill(midColor);
 
-    // Drawing the center of the flower
-    stroke(0);
-    strokeWeight(1);
-    ellipse(x, y, size * 0.3, size * 0.3); // Adjust the size of the center
-
-    // Trigger explosion at the end of the interval
+     // Drawing the center of the flower
+     stroke(0);
+     strokeWeight(1);
+     ellipse(x, y, size * 0.3, size * 0.3); // Adjust the size of the center
+ 
+     // Trigger explosion at the end of the interval
     if (millis() - lastSwitchTime > switchInterval - 1000) {
         particleSystem.addParticle(x, y, size, petalColor);
     }
@@ -103,6 +103,7 @@ function drawPetal(petalColor, size) {
 
 function drawStem(x, y, size, stemColor) {
     noFill();
+    //fill(120, 100, 60); // No fill for the stem
     stroke(stemColor); // Set the stroke color for the stem
     strokeWeight(0.08 * size); // Set the stroke weight for the stem
 
