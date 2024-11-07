@@ -30,7 +30,7 @@ function canBase(x, y, w, h, color) {
 
 function canFlame(x, y, size, flameHeight, flameColor) {
     // Set the shadow properties for the glow effect
-    drawingContext.shadowBlur = flameHeight * 0.5;
+    drawingContext.shadowBlur = flameHeight * 1;
     drawingContext.shadowColor = flameColor;
     drawingContext.shadowOffsetX = 0;
     drawingContext.shadowOffsetY = 0;

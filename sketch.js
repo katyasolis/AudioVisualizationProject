@@ -33,7 +33,8 @@ let growthFactor = 1; // Growth factor for flames
 let particleSystem;
 
 function setup() {
-    let canvas = createCanvas(window.innerWidth, window.innerWidth / ratio);
+    let canvas = createCanvas(window.innerWidth, window.innerWidth);
+    windowResized();
     globeScale = min(width, height);
     colorMode(HSB);
     getAudioContext().suspend();
@@ -93,7 +94,7 @@ function draw() {
             assetSize = 1;
         }
 
-        //frequency analysis
+       //frequency analysis
         let lowFreqAvg = 0, highFreqAvg = 0, lowFreqCount = 0, highFreqCount = 0;
 
         for (let i = 0; i < spectrum.length; i++) {
@@ -106,8 +107,6 @@ function draw() {
             }
         }
 
-        
-
         // sliders 
         volSense = volSenseSlider.value();
         let targetNumRaindrops = numRaindropsSlider.value();
@@ -115,8 +114,8 @@ function draw() {
 
        // Calculate target positions based on volume
        targetYOffset = map(normVol, 0, 1, 0, -60) * 0.175;
-       targetYOffset2 = map(normVol, 0, 1, 0, -100) * 0.275;
-       targetYOffset3 = map(normVol, 0, 1, 0, -75) * 0.375;
+       targetYOffset2 = map(normVol, 0, 1, 0, -100) * 0.295;
+       targetYOffset3 = map(normVol, 0, 1, 0, -75) * 0.425;
        targetYOffset4 = map(normVol, 0, 1, 0, -140) * 0.475;
 
        // Smoothly interpolate current positions towards target positions
@@ -172,57 +171,68 @@ function draw() {
             lowFreqAvg /= lowFreqCount;
             highFreqAvg /= highFreqCount;
 
-            lowFreqHue = map(lowFreqAvg, 0, 255, 160, 185);
-            highFreqHue = map(highFreqAvg, 0, 255, 10, 60);
+            lowFreqHue = map(lowFreqAvg, 0, 127.5, 165, 190);
+            highFreqHue = map(highFreqAvg, 127.51, 255, 30, 75);
+
+            // Define different brightness and saturation values
+            let lowFreqSaturation = 85;
+            let lowFreqBrightness = 100;
+            let highFreqSaturation = 85;
+            let highFreqBrightness = 100;
 
             for (let y = 0; y < height; y++) {
                 let inter = map(y, 0, height, 0, 1);
-                let c = lerpColor(color(lowFreqHue, 100, 100), color(highFreqHue, 100, 100), inter);
+                let c = lerpColor(color(lowFreqHue, lowFreqSaturation, lowFreqBrightness), color(highFreqHue, highFreqSaturation, highFreqBrightness), inter);
                 stroke(c);
                 line(0, y, width, y);
             }
 
             // Draw flowers
-             flower(100, (window.innerHeight + 75) + currentYOffset, 250 * assetSize, 6, midColor1, petalColor1, stemColor1);
-             flower(200, (window.innerHeight + 100) + currentYOffset2, 100 * assetSize, 6, midColor1, petalColor1, stemColor1);
-             flower(300, (window.innerHeight + 25) + currentYOffset3, 150 * assetSize, 6, midColor2, petalColor3, stemColor1);
-             flower(400, (window.innerHeight + 50) + currentYOffset4, 200 * assetSize, 6, midColor2, petalColor2, stemColor1); 
-             flower(600, (window.innerHeight + 25) + currentYOffset3, 150 * assetSize, 6, midColor1, petalColor3, stemColor1);
-             flower(800, (window.innerHeight + 75) + currentYOffset, 250 * assetSize, 6, midColor2, petalColor1, stemColor1);
-             flower(900, (window.innerHeight + 100) + currentYOffset, 100 * assetSize, 6, midColor2, petalColor1, stemColor1);
-             flower(1000, (window.innerHeight + 50) + currentYOffset2, 150 * assetSize, 6, midColor1, petalColor2, stemColor1);
-             flower(1050, (window.innerHeight + 25) + currentYOffset3, 200 * assetSize, 6, midColor1, petalColor3, stemColor1);
-             flower(1200, (window.innerHeight + 25) + currentYOffset3, 200 * assetSize, 6, midColor2, petalColor3, stemColor1);
-             flower(1300, (window.innerHeight + 75) + currentYOffset, 100 * assetSize, 6, midColor1, petalColor1, stemColor1);
+             flower(width * 0.05, (height - 125) + currentYOffset2, 300 * assetSize, 6, midColor1, petalColor1, stemColor1);
+             flower(width * 0.85, (height - 150) + currentYOffset, 180 * assetSize, 8, midColor1, petalColor1, stemColor1);
+             flower(width * 0.175, (height - 55) + currentYOffset3, 150 * assetSize, 6, midColor2, petalColor3, stemColor1);
+             flower(width * 0.265, (height - 100) + currentYOffset4, 200 * assetSize, 5, midColor2, petalColor2, stemColor1); 
+             flower(width * 0.375, (height - 75) + currentYOffset3, 250 * assetSize, 6, midColor1, petalColor3, stemColor1);
+             flower(width * 0.42, (height - 125) + currentYOffset, 250 * assetSize, 7, midColor2, petalColor1, stemColor1);
+             flower(width * 0.5, (height - 180) + currentYOffset2, 100 * assetSize, 6, midColor2, petalColor1, stemColor1);
+             flower(width * 0.65, (height - 100) + currentYOffset, 350 * assetSize, 6, midColor1, petalColor2, stemColor1);
+             flower(width * 0.75, (height - 75) + currentYOffset3, 200 * assetSize, 4, midColor1, petalColor3, stemColor1);
+             flower(width * 0.8, (height - 35) + currentYOffset4, 200 * assetSize, 6, midColor2, petalColor3, stemColor1);
+             flower(width * 0.95, (height - 125) + currentYOffset2, 100 * assetSize, 9, midColor1, petalColor1, stemColor1);
         } else {
             // Night background with frequency analysis
             lowFreqAvg /= lowFreqCount;
             highFreqAvg /= highFreqCount;
 
-            lowFreqHue = map(lowFreqAvg, 0, 255, 210, 280);
-            highFreqHue = map(highFreqAvg, 0, 255, 310, 330);
+            lowFreqHue = map(lowFreqAvg, 0, 127.5, 235, 290);
+            highFreqHue = map(highFreqAvg, 127.51, 255, 1, 40);
+
+            let lowFreqSaturation = 100;
+            let lowFreqBrightness = 45;
+            let highFreqSaturation = 100;
+            let highFreqBrightness = 75;
 
             for (let y = 0; y < height; y++) {
                 let inter = map(y, 0, height, 0, 1);
-                let c = lerpColor(color(lowFreqHue, 100, 100), color(highFreqHue, 100, 100), inter);
+                let c = lerpColor(color(lowFreqHue, lowFreqSaturation, lowFreqBrightness), color(highFreqHue, highFreqSaturation, highFreqBrightness), inter);
                 stroke(c);
                 line(0, y, width, y);
             }
 
             //Draw candles
-             candle(40, (window.innerHeight + 50) + currentYOffset2, 150, assetSize, canColor3, flameColor3);
-             candle(100, (window.innerHeight + 75) + currentYOffset, 100, assetSize, canColor1, flameColor1);
-             candle(150, (window.innerHeight + 100) + currentYOffset3 , 50, assetSize, canColor2, flameColor1);
-             candle(315, (window.innerHeight + 30) + currentYOffset2, 200, assetSize, canColor3, flameColor2);
-             candle(400, (window.innerHeight + 50) + currentYOffset4, 75, assetSize, canColor2, flameColor1);
-             candle(550, (window.innerHeight + 80) + currentYOffset, 95, assetSize, canColor1, flameColor3);
-             candle(650, (window.innerHeight + 90) + currentYOffset2, 45, assetSize, canColor1, flameColor2);
-             candle(750, (window.innerHeight + 120) + currentYOffset4, 130, assetSize, canColor2, flameColor2);
-             candle(875, (window.innerHeight + 25) + currentYOffset4, 65, assetSize, canColor3, flameColor1);
-             candle(900, (window.innerHeight + 90) + currentYOffset4, 75, assetSize, canColor2, flameColor1);
-             candle(1000, (window.innerHeight + 30) + currentYOffset, 140, assetSize, canColor3, flameColor3);
-             candle(1150, (window.innerHeight + 80) + currentYOffset3, 55, assetSize, canColor1, flameColor2);
-             candle(1250, (window.innerHeight + 75) + currentYOffset, 190, assetSize, canColor3, flameColor1); 
+             candle(width * 0.03, (height - 185) + currentYOffset2, 150, assetSize, canColor3, flameColor3);
+             candle(width * 0.1, (height - 155) + currentYOffset, 100, assetSize, canColor1, flameColor1);
+             candle(width * 0.175, (height - 80) + currentYOffset3 , 70, assetSize, canColor2, flameColor1);
+             candle(width * 0.22, (height - 130) + currentYOffset2, 200, assetSize, canColor3, flameColor2);
+             candle(width * 0.35, (height - 130) + currentYOffset4, 105, assetSize, canColor2, flameColor1);
+             candle(width * 0.4, (height - 140) + currentYOffset, 95, assetSize, canColor1, flameColor3);
+             candle(width * 0.5, (height - 170) + currentYOffset2, 45, assetSize, canColor1, flameColor2);
+             candle(width * 0.575, (height - 55) + currentYOffset4, 130, assetSize, canColor2, flameColor2);
+             candle(width * 0.625, (height - 140) + currentYOffset, 95, assetSize, canColor3, flameColor1);
+             candle(width * 0.785, (height - 240) + currentYOffset4, 125, assetSize, canColor2, flameColor1);
+             candle(width * 0.825, (height - 130) + currentYOffset, 140, assetSize, canColor3, flameColor3);
+             candle(width * 0.95, (height - 65) + currentYOffset3, 75, assetSize, canColor1, flameColor2);
+             candle(width * 0.975, (height - 125) + currentYOffset2, 190, assetSize, canColor3, flameColor1); 
         }
     }
 
@@ -235,6 +245,11 @@ function draw() {
     particleSystem.update();
     particleSystem.display();
 
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    globeScale = min(width, height);
 }
 
 function mousePressed() {
