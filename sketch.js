@@ -58,13 +58,14 @@ function setup() {
     volSenseSlider = createSlider(0, 200, volSense, slideStep);
     volSenseSlider.position(10, 10);
     volSenseSlider.style('width', '400px');
-    volSenseSlider.style('height', '20px');
+    volSenseSlider.class('slider-volsense');
+    volSenseSlider.input(() => updateSliderBackground(volSenseSlider, 'rgba(255, 0, 0, 0.7)', 'rgba(255, 0, 0, 0.3)'));
 
     numRaindropsSlider = createSlider(10, 200, numRaindrops, slideStep);
     numRaindropsSlider.position(10, 50);
     numRaindropsSlider.style('width', '400px');
-    numRaindropsSlider.style('height', '20px');
     numRaindropsSlider.class('slider-raindrop');
+    numRaindropsSlider.input(() => updateSliderBackground(numRaindropsSlider, 'rgba(0, 0, 255, 0.7)', 'rgba(0, 0, 255, 0.3)'));
 
     mic = new p5.AudioIn();
     mic.start();
@@ -76,6 +77,12 @@ function setup() {
     }
 }
 
+function updateSliderBackground(slider, color1, color2) {
+    let value = slider.value();
+    let max = slider.elt.max;
+    let percentage = (value / max) * 100;
+    slider.style('background', `linear-gradient(to right, ${color1} ${percentage}%, ${color2} ${percentage}%)`);
+}
 function draw() {
     background(210, 35, 100);
 
