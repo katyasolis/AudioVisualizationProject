@@ -171,7 +171,7 @@ function draw() {
 
         if (raindrops.length < targetNumRaindrops) {
             for (let i = raindrops.length; i < targetNumRaindrops; i++) {
-                raindrops.push(new Raindrop(random(width), random(height), dropW, dropH, random(1, 5), rainColor));
+                raindrops.push(new Raindrop(random(width), random(height), dropW, dropH, random(1, 5), rainColor, 255));
             }
         } else if (raindrops.length > targetNumRaindrops) {
             raindrops.splice(targetNumRaindrops);
@@ -240,32 +240,44 @@ function draw() {
             offset2 = height * 0.14;
             offset3 = height * 0.12;
 
+            flower(width * 0.1, (height - (offset1 + 400)) + currentYOffset2, (globeScale * 0.12) * assetSize, 6, color(60, 100, 50), color(40, 100, 60), color(130, 100, 50), 10, 210);
+            flower(width * 0.25, (height - (offset2 + 550)) + currentYOffset, (globeScale * 0.25) * assetSize, 4, color(60, 100, 50), color(210, 100, 60), color(130, 100, 50), 10, 210);
+            flower(width * 0.4, (height - (offset1 + 370)) + currentYOffset3, (globeScale * 0.175) * assetSize, 6, color(60, 100, 50), color(270, 100, 60), color(130, 100, 50), 10, 210);
+            flower(width * 0.55, (height - (offset3 + 500)) + currentYOffset2, (globeScale * 0.15) * assetSize, 7, color(60, 100, 50), color(330, 100, 60), color(130, 100, 50), 10, 210);
+            flower(width * 0.7, (height - (offset2 + 650)) + currentYOffset4, (globeScale * 0.2) * assetSize, 6, color(60, 100, 50), color(90, 100, 60), color(130, 100, 50), 10, 210);
+            flower(width * 0.85, (height - (offset1 + 550)) + currentYOffset, (globeScale * 0.18) * assetSize, 5, color(60, 100, 50), color(150, 100, 60), color(130, 100, 50), 10, 210);    
+
             drawingRain(backgroundRaindrops);
 
-            /*flower(width * 0.05, (height - (offset1 - offset1)) + currentYOffset2, (globeScale * 0.23) * assetSize, 6, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 0, 255);
-
-            flower(width * 0.5, (height - (offset1 - offset3)) + currentYOffset2, (globeScale * 0.23) * assetSize, 6, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 0, 255);*/
+            flower(width * 0.05, (height - (offset1 + 210)) + currentYOffset4, (globeScale * 0.43) * assetSize, 6, color(60, 100, 60), color(300, 90, 70), color(120, 90, 70), 15, 235);
+            flower(width * 0.25, (height - (offset2 + 205)) + currentYOffset2, (globeScale * 0.25) * assetSize, 4, color(60, 100, 60), color(260, 90, 70), color(120, 90, 70), 15, 235);
+            flower(width * 0.35, (height - (offset1 + 180)) + currentYOffset3, (globeScale * 0.33) * assetSize, 6, color(60, 100, 60), color(30, 90, 70), color(120, 90, 70), 15, 235);
+            flower(width * 0.5, (height - (offset3 + 125)) + currentYOffset2, (globeScale * 0.4) * assetSize, 7, color(60, 100, 60), color(200, 90, 70), color(120, 90, 70), 15, 235);
+            flower(width * 0.65, (height - (offset2 + 245)) + currentYOffset3, (globeScale * 0.25) * assetSize, 6, color(60, 100, 60), color(330, 90, 70), color(120, 90, 70), 15, 235);
+            flower(width * 0.8, (height - (offset1 + 160)) + currentYOffset4, (globeScale * 0.3) * assetSize, 5, color(60, 100, 60), color(270, 90, 70), color(120, 90, 70), 15, 235);
+            flower(width * 0.95, (height - (offset3 + 285)) + currentYOffset, (globeScale * 0.4) * assetSize, 6, color(60, 100, 60), color(25, 90, 70), color(120, 90, 70), 15, 235);
 
             drawingRain(middleRaindrops);
 
             // Draw flowers
-            flower(width * 0.05, (height - offset1) + currentYOffset2, (globeScale * 0.32) * assetSize, 6, color(60, 100, 100), color(190, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.05, (height - offset1) + currentYOffset2, (globeScale * 0.32) * assetSize, 6, color(60, 100, 100), color(190, 80, 100), color(120, 100, 100), 25, 255);
             flower(width * 0.85, (height - offset3) + currentYOffset, (globeScale * 0.14) * assetSize, 8, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 30, 255);
-            flower(width * 0.175, (height - offset1) + currentYOffset3, (globeScale * 0.42) * assetSize, 6, color(60, 100, 100), color(270, 80, 100), color(120, 100, 100), 10, 255);
+            flower(width * 0.175, (height - offset1) + currentYOffset3, (globeScale * 0.42) * assetSize, 6, color(60, 100, 100), color(270, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.225, (height - offset2) + currentYOffset2, (globeScale * 0.35) * assetSize, 6, color(60, 100, 100), color(25, 70, 100), color(120, 100, 100), 25, 255);
             flower(width * 0.265, (height - offset1) + currentYOffset4, (globeScale * 0.2) * assetSize, 5, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 20, 255);
             flower(width * 0.375, (height - offset2) + currentYOffset3, (globeScale * 0.28) * assetSize, 6, color(60, 100, 100), color(200, 80, 100), color(120, 100, 100), 40, 255);
-            flower(width * 0.42, (height - offset1) + currentYOffset, (globeScale * 0.18) * assetSize, 7, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 30, 255);
-            flower(width * 0.5, (height - offset3) + currentYOffset2, (globeScale * 0.25) * assetSize, 6, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 20, 255);
-            flower(width * 0.65, (height - offset1) + currentYOffset, (globeScale * 0.5) * assetSize, 6, color(60, 100, 100), color(190, 80, 100), color(120, 100, 100), 10, 255);
-            flower(width * 0.75, (height - offset3) + currentYOffset3, (globeScale * 0.3) * assetSize, 4, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 30, 255);
-            flower(width * 0.8, (height - offset1) + currentYOffset4, (globeScale * 0.43) * assetSize, 6, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 40, 255);
-            flower(width * 0.95, (height - offset1) + currentYOffset2, (globeScale * 0.33) * assetSize, 9, color(60, 100, 100), color(270, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.45, (height - offset1) + currentYOffset, (globeScale * 0.23) * assetSize, 7, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 35, 255);
+            flower(width * 0.55, (height - offset3) + currentYOffset2, (globeScale * 0.35) * assetSize, 6, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.7, (height - offset1) + currentYOffset, (globeScale * 0.5) * assetSize, 6, color(60, 100, 100), color(190, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.78, (height - offset3) + currentYOffset3, (globeScale * 0.3) * assetSize, 4, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 30, 255);
+            flower(width * 0.85, (height - offset1) + currentYOffset4, (globeScale * 0.43) * assetSize, 6, color(60, 100, 100), color(25, 70, 100), color(120, 100, 100), 25, 255);
+            flower(width * 0.95, (height - offset1) + currentYOffset2, (globeScale * 0.25) * assetSize, 9, color(60, 100, 100), color(270, 80, 100), color(120, 100, 100), 25, 255);
         } else {
             // Night background with frequency analysis
             lowFreqAvg /= lowFreqCount;
             highFreqAvg /= highFreqCount;
 
-            lowFreqHue = map(lowFreqAvg, 0, 127.5, 235, 290);
+            lowFreqHue = map(lowFreqAvg, 0, 127.5, 190, 250);
             highFreqHue = map(highFreqAvg, 127.51, 255, 1, 40);
 
             let lowFreqSaturation = 100;
@@ -295,7 +307,7 @@ function draw() {
 
             drawingRain(middleRaindrops);
             // Draw middle candles
-            candle(width * 0.095, (height - (offset2 + 230)) + currentYOffset2, (globeScale * 0.155), assetSize, backCanColor3, backFlameColor, 230);
+            candle(width * 0.095, (height - (offset2 + 230)) + currentYOffset2, (globeScale * 0.225), assetSize, backCanColor3, backFlameColor, 230);
             candle(width * 0.3, (height - (offset2 + 180)) + currentYOffset4, (globeScale * 0.2), assetSize, backCanColor2, backFlameColor, 230);
             candle(width * 0.5, (height - (offset2 + 195)) + currentYOffset, (globeScale * 0.13), assetSize, backCanColor1, backFlameColor, 230);
             candle(width * 0.6, (height - (offset2 + 220)) + currentYOffset2, (globeScale * 0.1), assetSize, backCanColor2, backFlameColor, 230);
