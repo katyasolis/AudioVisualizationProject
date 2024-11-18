@@ -55,11 +55,11 @@ class ParticleSystem {
     }
 }
 
-function flower(x, y, size, numPetals, midColor, petalColor, stemColor, satRange) {
+function flower(x, y, size, numPetals, midColor, petalColor, stemColor, hueRange, opacity) {
     //Drawing stem of the flower
 
     //SYD: Added parameter for stem length
-    drawStem(x + 2, y + 17, size, stemColor, globeScale * 0.5);
+    drawStem(x + 2, y + 17, size, stemColor, globeScale * 0.5, opacity);
 
     // Extract the HSB values from petalColor
     let baseHueValue = hue(petalColor);
@@ -67,17 +67,17 @@ function flower(x, y, size, numPetals, midColor, petalColor, stemColor, satRange
     let baseBrightness = brightness(petalColor);
     
     // Introduce a time-based factor that changes slowly
-    let slowFactor = map(sin(millis() / 5000), -1, 1, -10, 10); // Change every 5 seconds
+    let slowFactor = map(sin(millis() / 5000), -1, 1, -hueRange, hueRange); // Change every 5 seconds
 
     // Drawing petals
     for (let i = 0; i < numPetals; i++) {
         push();
         translate(x, y);
         rotate(TWO_PI * i / numPetals);
-        let petalHue = (baseHueValue + slowFactor) % 360;
-        let petalSaturation = constrain(baseSaturation + random(-satRange, satRange), 0, 100);
-        let petalColor = color(petalHue, petalSaturation, baseBrightness);
-        drawPetal(petalColor, size);
+        let petalHue = (baseHueValue + slowFactor + random(-hueRange, hueRange)) % 360;
+        //let petalSaturation = constrain(baseSaturation + random(-satRange, satRange), 0, 100);
+        let flowerPetalColor = color(petalHue, baseSaturation, baseBrightness, opacity / 255); // Use petalSaturation here
+        drawPetal(flowerPetalColor, size);
         pop();
     }
     
@@ -115,9 +115,9 @@ function drawPetal(petalColor, size) {
     endShape(CLOSE);
 }
 
-function drawStem(x, y, size, stemColor, stemLength) {
+function drawStem(x, y, size, stemColor, stemLength, opacity) {
     noFill();
-    stroke(stemColor); // Set the stroke color for the stem
+    stroke(hue(stemColor), saturation(stemColor), brightness(stemColor), opacity/255); // Set the stroke color for the stem
     strokeWeight(0.08 * size); // Set the stroke weight for the stem
 
     //SYD: Added Parameter for stem length

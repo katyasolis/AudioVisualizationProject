@@ -242,22 +242,24 @@ function draw() {
 
             drawingRain(backgroundRaindrops);
 
-            flower(width * 0.05, (height - (offset1 + 200)) + currentYOffset2, (globeScale * 0.23) * assetSize, 6, midColor1, petalColor1, stemColor1, 20);
+            /*flower(width * 0.05, (height - (offset1 - offset1)) + currentYOffset2, (globeScale * 0.23) * assetSize, 6, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 0, 255);
+
+            flower(width * 0.5, (height - (offset1 - offset3)) + currentYOffset2, (globeScale * 0.23) * assetSize, 6, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 0, 255);*/
 
             drawingRain(middleRaindrops);
 
             // Draw flowers
-            flower(width * 0.05, (height - offset1) + currentYOffset2, (globeScale * 0.32) * assetSize, 6, midColor1, petalColor1, stemColor1, 100);
-            flower(width * 0.85, (height - offset3) + currentYOffset, (globeScale * 0.14) * assetSize, 8, midColor1, petalColor1, stemColor1, 100);
-            flower(width * 0.175, (height - offset1) + currentYOffset3, (globeScale * 0.42) * assetSize, 6, midColor2, petalColor3, stemColor1, 100);
-            flower(width * 0.265, (height - offset1) + currentYOffset4, (globeScale * 0.2) * assetSize, 5, midColor2, petalColor2, stemColor1, 100);
-            flower(width * 0.375, (height - offset2) + currentYOffset3, (globeScale * 0.28) * assetSize, 6, midColor1, petalColor3, stemColor1, 100);
-            flower(width * 0.42, (height - offset1) + currentYOffset, (globeScale * 0.18) * assetSize, 7, midColor2, petalColor1, stemColor1, 100);
-            flower(width * 0.5, (height - offset3) + currentYOffset2, (globeScale * 0.25) * assetSize, 6, midColor2, petalColor1, stemColor1, 100);
-            flower(width * 0.65, (height - offset1) + currentYOffset, (globeScale * 0.5) * assetSize, 6, midColor1, petalColor2, stemColor1, 100);
-            flower(width * 0.75, (height - offset3) + currentYOffset3, (globeScale * 0.3) * assetSize, 4, midColor1, petalColor3, stemColor1, 100);
-            flower(width * 0.8, (height - offset1) + currentYOffset4, (globeScale * 0.43) * assetSize, 6, midColor2, petalColor3, stemColor1, 100);
-            flower(width * 0.95, (height - offset1) + currentYOffset2, (globeScale * 0.33) * assetSize, 9, midColor1, petalColor1, stemColor1, 100);
+            flower(width * 0.05, (height - offset1) + currentYOffset2, (globeScale * 0.32) * assetSize, 6, color(60, 100, 100), color(190, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.85, (height - offset3) + currentYOffset, (globeScale * 0.14) * assetSize, 8, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 30, 255);
+            flower(width * 0.175, (height - offset1) + currentYOffset3, (globeScale * 0.42) * assetSize, 6, color(60, 100, 100), color(270, 80, 100), color(120, 100, 100), 10, 255);
+            flower(width * 0.265, (height - offset1) + currentYOffset4, (globeScale * 0.2) * assetSize, 5, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.375, (height - offset2) + currentYOffset3, (globeScale * 0.28) * assetSize, 6, color(60, 100, 100), color(200, 80, 100), color(120, 100, 100), 40, 255);
+            flower(width * 0.42, (height - offset1) + currentYOffset, (globeScale * 0.18) * assetSize, 7, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 30, 255);
+            flower(width * 0.5, (height - offset3) + currentYOffset2, (globeScale * 0.25) * assetSize, 6, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 20, 255);
+            flower(width * 0.65, (height - offset1) + currentYOffset, (globeScale * 0.5) * assetSize, 6, color(60, 100, 100), color(190, 80, 100), color(120, 100, 100), 10, 255);
+            flower(width * 0.75, (height - offset3) + currentYOffset3, (globeScale * 0.3) * assetSize, 4, color(60, 100, 100), color(300, 80, 100), color(120, 100, 100), 30, 255);
+            flower(width * 0.8, (height - offset1) + currentYOffset4, (globeScale * 0.43) * assetSize, 6, color(60, 100, 100), color(330, 80, 100), color(120, 100, 100), 40, 255);
+            flower(width * 0.95, (height - offset1) + currentYOffset2, (globeScale * 0.33) * assetSize, 9, color(60, 100, 100), color(270, 80, 100), color(120, 100, 100), 20, 255);
         } else {
             // Night background with frequency analysis
             lowFreqAvg /= lowFreqCount;
