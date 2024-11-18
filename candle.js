@@ -1,8 +1,8 @@
-function candle(x, y, size, flameHeight, color, flameColor) {
+function candle(x, y, size, flameHeight, color, flameColor, opacity) {
     let w = size; 
     let h = size * 2;
-    canBase(x, y, w, h, color);
-    canFlame(x, y - h/5, w / 2, flameHeight, flameColor);
+    canBase(x, y, w, h, color, opacity);
+    canFlame(x, y - h/5, w / 2, flameHeight, flameColor, opacity);
 
     // Trigger explosion when the interval switches
     if (millis() - lastSwitchTime > switchInterval - 1000) {
@@ -11,9 +11,10 @@ function candle(x, y, size, flameHeight, color, flameColor) {
 
 }
 
-function canBase(x, y, w, h, color) {
-    fill(color); // Set fill color for the cylinder
-    stroke(1,0, 100); // Set stroke color for the cylinder
+function canBase(x, y, w, h, color, opacity) {
+    colorMode(HSB, 360, 100, 100, 1); // Set color mode to HSB
+    fill(hue(color), saturation(color), brightness(color), opacity/255); // Set fill color with opacity
+    stroke(hue(1), saturation(0), brightness(100), opacity/255); // Set stroke color for the cylinder
     strokeWeight(w * 0.02);
     
 
@@ -28,15 +29,16 @@ function canBase(x, y, w, h, color) {
     arc(x, y + h, w, w / 5, 0, PI);
 }
 
-function canFlame(x, y, size, flameHeight, flameColor) {
+function canFlame(x, y, size, flameHeight, flameColor, opacity) {
     // Set the shadow properties for the glow effect
     drawingContext.shadowBlur = flameHeight * 1;
     drawingContext.shadowColor = flameColor;
     drawingContext.shadowOffsetX = 0;
     drawingContext.shadowOffsetY = 0;
 
-    fill(flameColor); // Set fill color for the flame
-    stroke(25, 100, 75); // Set stroke color for the flame (dark orange)
+    colorMode(HSB, 360, 100, 100, 1); // Set color mode to HSB
+    fill(hue(flameColor), saturation(flameColor), brightness(flameColor), opacity/255); // Set fill color with opacity
+    stroke(hue(25), saturation(100), brightness(75), opacity/255); // Set stroke color for the flame (dark orange)
     strokeWeight(size * 0.02);
 
 

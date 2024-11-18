@@ -1,18 +1,19 @@
 class Raindrop {
-    constructor(x, y, width, height, speed) {
+    constructor(x, y, width, height, speed, color, alpha) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.alpha = 255;
+        this.color = color;
+        this.alpha = alpha;
         this.oscillationSpeed = random(0.05, 0.2);
         this.oscillationOffset = random(TWO_PI);
     }
 
     update(yOffset) {
         this.y += this.speed + yOffset;
-        this.alpha = 128 + 127 * sin(this.oscillationSpeed * frameCount + this.oscillationOffset);
+        //this.alpha = 128 + 127 * sin(this.oscillationSpeed * frameCount + this.oscillationOffset);
         if (this.y > height) {
             this.y = 0;
             this.x = random(width);
@@ -23,7 +24,7 @@ class Raindrop {
 
     display() {
         noFill();
-        fill(210, 50, 100, this.alpha);
+        fill(hue(this.color), saturation(this.color), brightness(this.color), this.alpha/255);
         noStroke();
         stroke('black');
         strokeWeight(1);

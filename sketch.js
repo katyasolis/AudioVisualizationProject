@@ -11,9 +11,11 @@ let detectBeat = false;
 let detectBeat2 = false;
 
 let midColor1, midColor2, petalColor1, petalColor2, petalColor3, stemColor1;
-let canColor1, flameColor1, canColor2, flameColor2, canColor3, flameColor3;
+let canColor1, flameColor1, canColor2, flameColor2, canColor3, flameColor3, backFlameColor, backCanColor1, backCanColor2;
 let baseHue1, baseHue2, baseHue3;
 let lowFreqHue, highFreqHue;
+let rainColor;
+let rainDayBackColor, rainNightBackColor;
 let assetSize = 1;
 
 
@@ -22,6 +24,10 @@ let targetYOffset = 0, targetYOffset2 = 0, targetYOffset3 = 0, targetYOffset4 = 
 let currentYOffset = 0, currentYOffset2 = 0, currentYOffset3 = 0, currentYOffset4 = 0;
 
 let raindrops = [];
+let middleRaindrops = [];
+let backgroundRaindrops = [];
+let numBackgroundRaindrops = 25;
+let numMiddleRaindrops = 35;
 let numRaindrops = 50;
 let rainDropyOffset = 0;
 
@@ -31,6 +37,9 @@ let lastSwitchTime = 0; // Track the last switch time
 let growthFactor = 1; // Growth factor for flames
 
 let particleSystem;
+
+let offset1, offset2, offset3;//SYD: for scaling position from hieght
+let dropW, dropH; //SYD: for scaling raindrop size
 
 function setup() {
     let canvas = createCanvas(window.innerWidth, window.innerWidth);
@@ -54,16 +63,20 @@ function setup() {
     flameColor1 = color(25, 100, 100);
     flameColor2 = color(75, 80, 100);
     flameColor3 = color(150, 50, 100);
+    backFlameColor = color(25, 95, 70);
+    backCanColor1 = color(50, 65, 80);
+    backCanColor2 = color(15, 55, 80);
+    backCanColor3 = color(310, 75, 80);
 
     volSenseSlider = createSlider(0, 200, volSense, slideStep);
-    volSenseSlider.position(10, 10);
-    volSenseSlider.style('width', '400px');
+    volSenseSlider.position(10, height*0.02);
+    //volSenseSlider.style('width', '400px');
     volSenseSlider.class('slider-volsense');
     volSenseSlider.input(() => updateSliderBackground(volSenseSlider, 'rgba(255, 0, 0, 0.7)', 'rgba(255, 0, 0, 0.3)'));
 
     numRaindropsSlider = createSlider(10, 200, numRaindrops, slideStep);
-    numRaindropsSlider.position(10, 50);
-    numRaindropsSlider.style('width', '400px');
+    numRaindropsSlider.position(10, height*0.05);
+    //numRaindropsSlider.style('width', '400px');
     numRaindropsSlider.class('slider-raindrop');
     numRaindropsSlider.input(() => updateSliderBackground(numRaindropsSlider, 'rgba(0, 0, 255, 0.7)', 'rgba(0, 0, 255, 0.3)'));
 
@@ -72,9 +85,30 @@ function setup() {
     fft = new p5.FFT();
     fft.setInput(mic);
 
-    for (let i = 0; i < numRaindrops; i++) {
-        raindrops.push(new Raindrop(random(width), random(height), 20, 40, random(1, 5)));
+    // Create background raindrops
+    for (let i = 0; i < numBackgroundRaindrops; i++) {
+        dropW = random(globeScale * 0.02, globeScale * 0.04);
+        dropH = dropW * 1.5;
+        let rainColor = color(220, 90, 100);
+        backgroundRaindrops.push(new Raindrop(random(width), random(height), dropW, dropH, random(1, 2.5), rainColor, 160));
     }
+
+    // Create middle ground raindrops
+    for (let i = 0; i < numMiddleRaindrops; i++) {
+        dropW = random(globeScale * 0.02, globeScale * 0.04);
+        dropH = dropW * 1.75;
+        let rainColor = color(215, 70, 100);
+        middleRaindrops.push(new Raindrop(random(width), random(height), dropW, dropH, random(1.5, 4), rainColor, 230));
+    }
+
+    // Create raindrops
+    //SYD: Made your raindrops scale with globeScale
+    for (let i = 0; i < numRaindrops; i++) {
+         dropW = random(globeScale*0.02, globeScale*0.04); 
+         dropH = dropW * 2; 
+         let rainColor = color(210, 50, 100);
+        raindrops.push(new Raindrop(random(width), random(height), dropW, dropH, random(2, 5), rainColor, 255));
+    } 
 }
 
 function updateSliderBackground(slider, color1, color2) {
@@ -101,7 +135,7 @@ function draw() {
             assetSize = 1;
         }
 
-       //frequency analysis
+        //frequency analysis
         let lowFreqAvg = 0, highFreqAvg = 0, lowFreqCount = 0, highFreqCount = 0;
 
         for (let i = 0; i < spectrum.length; i++) {
@@ -119,34 +153,34 @@ function draw() {
         let targetNumRaindrops = numRaindropsSlider.value();
         normVol = vol * volSense;
 
-       // Calculate target positions based on volume
-       targetYOffset = map(normVol, 0, 1, 0, -60) * 0.175;
-       targetYOffset2 = map(normVol, 0, 1, 0, -100) * 0.295;
-       targetYOffset3 = map(normVol, 0, 1, 0, -75) * 0.425;
-       targetYOffset4 = map(normVol, 0, 1, 0, -140) * 0.475;
+        // Calculate target positions based on volume
+        //SYD: Changed this so it would scale to height of canvas
+        targetYOffset = map(normVol, 0, 1, 0, -height * 0.175);
+        targetYOffset2 = map(normVol, 0, 1, 0, -height * 0.295);
+        targetYOffset3 = map(normVol, 0, 1, 0, -height * 0.425);
+        targetYOffset4 = map(normVol, 0, 1, 0, -height * 0.475);
 
-       // Smoothly interpolate current positions towards target positions
-       currentYOffset = lerp(currentYOffset, targetYOffset, 0.1);
-       currentYOffset2 = lerp(currentYOffset2, targetYOffset2, 0.1);
-       currentYOffset3 = lerp(currentYOffset3, targetYOffset3, 0.1);
-       currentYOffset4 = lerp(currentYOffset4, targetYOffset4, 0.1);
-
+        // Smoothly interpolate current positions towards target positions
+        currentYOffset = lerp(currentYOffset, targetYOffset, 0.1);
+        currentYOffset2 = lerp(currentYOffset2, targetYOffset2, 0.1);
+        currentYOffset3 = lerp(currentYOffset3, targetYOffset3, 0.1);
+        currentYOffset4 = lerp(currentYOffset4, targetYOffset4, 0.1);
 
         //raindrop analysis
         rainDropyOffset = map(normVol, 0, 1, 0, 5);
 
         if (raindrops.length < targetNumRaindrops) {
             for (let i = raindrops.length; i < targetNumRaindrops; i++) {
-                raindrops.push(new Raindrop(random(width), random(height), 20, 40, random(1, 5)));
+                raindrops.push(new Raindrop(random(width), random(height), dropW, dropH, random(1, 5), rainColor));
             }
         } else if (raindrops.length > targetNumRaindrops) {
             raindrops.splice(targetNumRaindrops);
-        }
+        } 
 
         for (let raindrop of raindrops) {
             raindrop.update(rainDropyOffset);
             raindrop.display();
-        }
+        } 
 
         // Change flower colors based on volume
         baseHue1 = (hue(petalColor1) + map(normVol, 0, 1, -10, 10)) % 360;
@@ -158,19 +192,21 @@ function draw() {
         petalColor3 = color(baseHue3, 100, 100);
 
         // Switch between displaying flowers and candles based on the timer
-    if (millis() - lastSwitchTime > switchInterval) {
-        displayFlowers = !displayFlowers;
-        lastSwitchTime = millis();
-        growthFactor = 1; // Reset growth factor when switching to candles
-        if (!displayFlowers) {
-            particleSystem.addParticle(width / 2, height / 2, 50, color(255, 204, 0)); // Trigger explosion
+        if (millis() - lastSwitchTime > switchInterval) {
+            displayFlowers = !displayFlowers;
+            lastSwitchTime = millis();
+            growthFactor = 1; // Reset growth factor when switching to candles
+            if (!displayFlowers) {
+                particleSystem.addParticle(width / 2, height / 2, 50, color(255, 204, 0)); // Trigger explosion
+            }
         }
-    }
 
-    // Update growth factor
-    if (!displayFlowers) {
-        growthFactor += 0.01; // Only update growth factor for flames
-    }
+       
+
+        // Update growth factor
+        if (!displayFlowers) {
+            growthFactor += 0.01; // Only update growth factor for flames
+        }
 
         // Display flowers or candles based on `displayFlowers` state
         if (displayFlowers) {
@@ -194,18 +230,34 @@ function draw() {
                 line(0, y, width, y);
             }
 
+           
+
+            //SYD: Your flower sizes were hard coded
+            //I scaled them using globeScale
+            //Also needed to scale the number for height offset
+            // You need to finish the rest of the flowers
+            offset1 = height * 0.2;
+            offset2 = height * 0.14;
+            offset3 = height * 0.12;
+
+            drawingRain(backgroundRaindrops);
+
+            flower(width * 0.05, (height - (offset1 + 200)) + currentYOffset2, (globeScale * 0.23) * assetSize, 6, midColor1, petalColor1, stemColor1, 20);
+
+            drawingRain(middleRaindrops);
+
             // Draw flowers
-             flower(width * 0.05, (height - 125) + currentYOffset2, 300 * assetSize, 6, midColor1, petalColor1, stemColor1);
-             flower(width * 0.85, (height - 150) + currentYOffset, 180 * assetSize, 8, midColor1, petalColor1, stemColor1);
-             flower(width * 0.175, (height - 55) + currentYOffset3, 150 * assetSize, 6, midColor2, petalColor3, stemColor1);
-             flower(width * 0.265, (height - 100) + currentYOffset4, 200 * assetSize, 5, midColor2, petalColor2, stemColor1); 
-             flower(width * 0.375, (height - 75) + currentYOffset3, 250 * assetSize, 6, midColor1, petalColor3, stemColor1);
-             flower(width * 0.42, (height - 125) + currentYOffset, 250 * assetSize, 7, midColor2, petalColor1, stemColor1);
-             flower(width * 0.5, (height - 180) + currentYOffset2, 100 * assetSize, 6, midColor2, petalColor1, stemColor1);
-             flower(width * 0.65, (height - 100) + currentYOffset, 350 * assetSize, 6, midColor1, petalColor2, stemColor1);
-             flower(width * 0.75, (height - 75) + currentYOffset3, 200 * assetSize, 4, midColor1, petalColor3, stemColor1);
-             flower(width * 0.8, (height - 35) + currentYOffset4, 200 * assetSize, 6, midColor2, petalColor3, stemColor1);
-             flower(width * 0.95, (height - 125) + currentYOffset2, 100 * assetSize, 9, midColor1, petalColor1, stemColor1);
+            flower(width * 0.05, (height - offset1) + currentYOffset2, (globeScale * 0.32) * assetSize, 6, midColor1, petalColor1, stemColor1, 100);
+            flower(width * 0.85, (height - offset3) + currentYOffset, (globeScale * 0.14) * assetSize, 8, midColor1, petalColor1, stemColor1, 100);
+            flower(width * 0.175, (height - offset1) + currentYOffset3, (globeScale * 0.42) * assetSize, 6, midColor2, petalColor3, stemColor1, 100);
+            flower(width * 0.265, (height - offset1) + currentYOffset4, (globeScale * 0.2) * assetSize, 5, midColor2, petalColor2, stemColor1, 100);
+            flower(width * 0.375, (height - offset2) + currentYOffset3, (globeScale * 0.28) * assetSize, 6, midColor1, petalColor3, stemColor1, 100);
+            flower(width * 0.42, (height - offset1) + currentYOffset, (globeScale * 0.18) * assetSize, 7, midColor2, petalColor1, stemColor1, 100);
+            flower(width * 0.5, (height - offset3) + currentYOffset2, (globeScale * 0.25) * assetSize, 6, midColor2, petalColor1, stemColor1, 100);
+            flower(width * 0.65, (height - offset1) + currentYOffset, (globeScale * 0.5) * assetSize, 6, midColor1, petalColor2, stemColor1, 100);
+            flower(width * 0.75, (height - offset3) + currentYOffset3, (globeScale * 0.3) * assetSize, 4, midColor1, petalColor3, stemColor1, 100);
+            flower(width * 0.8, (height - offset1) + currentYOffset4, (globeScale * 0.43) * assetSize, 6, midColor2, petalColor3, stemColor1, 100);
+            flower(width * 0.95, (height - offset1) + currentYOffset2, (globeScale * 0.33) * assetSize, 9, midColor1, petalColor1, stemColor1, 100);
         } else {
             // Night background with frequency analysis
             lowFreqAvg /= lowFreqCount;
@@ -226,32 +278,58 @@ function draw() {
                 line(0, y, width, y);
             }
 
+            drawingRain(backgroundRaindrops);
+            // Draw background candles
+            candle(width * 0.065, (height - (offset2 + 550)) + currentYOffset, (globeScale * 0.065), assetSize, canColor1, backFlameColor, 100);
+            candle(width * 0.125, (height - (offset2 + 450)) + currentYOffset3, (globeScale * 0.1), assetSize, canColor2, backFlameColor, 100);
+            candle(width * 0.25, (height - (offset2 + 400)) + currentYOffset2, (globeScale * 0.08), assetSize, canColor3, backFlameColor, 100);
+            candle(width * 0.375, (height - (offset2 + 350)) + currentYOffset4, (globeScale * 0.05), assetSize, canColor1, backFlameColor, 100);
+            candle(width * 0.45, (height - (offset2 + 500)) + currentYOffset, (globeScale * 0.05), assetSize, canColor2, backFlameColor, 100);
+            candle(width * 0.55, (height - (offset2 + 450)) + currentYOffset3, (globeScale * 0.09), assetSize, canColor3, backFlameColor, 100);
+            candle(width * 0.625, (height - (offset2 + 600)) + currentYOffset2, (globeScale * 0.03), assetSize, canColor1, backFlameColor, 100);
+            candle(width * 0.725, (height - (offset2 + 500)) + currentYOffset4, (globeScale * 0.07), assetSize, canColor2, backFlameColor, 100);
+            candle(width * 0.825, (height - (offset2 + 400)) + currentYOffset, (globeScale * 0.1), assetSize, canColor3, backFlameColor, 100);
+            candle(width * 0.925, (height - (offset2 + 350)) + currentYOffset3, (globeScale * 0.08), assetSize, canColor1, backFlameColor, 100);
+
+            drawingRain(middleRaindrops);
+            // Draw middle candles
+            candle(width * 0.095, (height - (offset2 + 230)) + currentYOffset2, (globeScale * 0.155), assetSize, backCanColor3, backFlameColor, 230);
+            candle(width * 0.3, (height - (offset2 + 180)) + currentYOffset4, (globeScale * 0.2), assetSize, backCanColor2, backFlameColor, 230);
+            candle(width * 0.5, (height - (offset2 + 195)) + currentYOffset, (globeScale * 0.13), assetSize, backCanColor1, backFlameColor, 230);
+            candle(width * 0.6, (height - (offset2 + 220)) + currentYOffset2, (globeScale * 0.1), assetSize, backCanColor2, backFlameColor, 230);
+            candle(width * 0.7, (height - (offset2 + 210)) + currentYOffset3, (globeScale * 0.2), assetSize, backCanColor3, backFlameColor, 230);
+            candle(width * 0.9, (height - (offset2 + 250)) + currentYOffset, (globeScale * 0.17), assetSize, backCanColor2, backFlameColor, 230);
+
             //Draw candles
-             candle(width * 0.03, (height - 185) + currentYOffset2, 150, assetSize, canColor3, flameColor3);
-             candle(width * 0.1, (height - 155) + currentYOffset, 100, assetSize, canColor1, flameColor1);
-             candle(width * 0.175, (height - 80) + currentYOffset3 , 70, assetSize, canColor2, flameColor1);
-             candle(width * 0.22, (height - 130) + currentYOffset2, 200, assetSize, canColor3, flameColor2);
-             candle(width * 0.35, (height - 130) + currentYOffset4, 105, assetSize, canColor2, flameColor1);
-             candle(width * 0.4, (height - 140) + currentYOffset, 95, assetSize, canColor1, flameColor3);
-             candle(width * 0.5, (height - 170) + currentYOffset2, 45, assetSize, canColor1, flameColor2);
-             candle(width * 0.575, (height - 55) + currentYOffset4, 130, assetSize, canColor2, flameColor2);
-             candle(width * 0.625, (height - 140) + currentYOffset, 95, assetSize, canColor3, flameColor1);
-             candle(width * 0.785, (height - 240) + currentYOffset4, 125, assetSize, canColor2, flameColor1);
-             candle(width * 0.825, (height - 130) + currentYOffset, 140, assetSize, canColor3, flameColor3);
-             candle(width * 0.95, (height - 65) + currentYOffset3, 75, assetSize, canColor1, flameColor2);
-             candle(width * 0.975, (height - 125) + currentYOffset2, 190, assetSize, canColor3, flameColor1); 
+            candle(width * 0.03, (height - offset1) + currentYOffset2, (globeScale * 0.3), assetSize, canColor3, flameColor3, 255);
+            candle(width * 0.1, (height - offset2) + currentYOffset, (globeScale * 0.2), assetSize, canColor1, flameColor1, 255);
+            candle(width * 0.175, (height - offset3) + currentYOffset3, (globeScale * 0.12), assetSize, canColor2, flameColor1, 255);
+            candle(width * 0.22, (height - offset1) + currentYOffset2, (globeScale * 0.14), assetSize, canColor3, flameColor2, 255);
+            candle(width * 0.35, (height - offset2) + currentYOffset4, (globeScale * 0.3), assetSize, canColor2, flameColor1, 255);
+            candle(width * 0.4, (height - offset3) + currentYOffset, (globeScale * 0.1), assetSize, canColor1, flameColor3, 255);
+            candle(width * 0.5, (height - offset1) + currentYOffset2, (globeScale * 0.2), assetSize, canColor1, flameColor2, 255);
+            candle(width * 0.575, (height - offset2) + currentYOffset4, (globeScale * 0.13), assetSize, canColor2, flameColor2, 255);
+            candle(width * 0.625, (height - offset3) + currentYOffset, (globeScale * 0.15), assetSize, canColor3, flameColor1, 255);
+            candle(width * 0.7, (height - offset1) + currentYOffset4, (globeScale * 0.12), assetSize, canColor2, flameColor1, 255);
+            candle(width * 0.755, (height - offset2) + currentYOffset2, (globeScale * 0.35), assetSize, canColor1, flameColor3, 255);
+            candle(width * 0.825, (height - offset2) + currentYOffset, (globeScale * 0.3), assetSize, canColor3, flameColor3, 255);
+            candle(width * 0.95, (height - offset1) + currentYOffset3, (globeScale * 0.1), assetSize, canColor1, flameColor2, 255);
+            candle(width * 0.975, (height - offset3) + currentYOffset2, (globeScale * 0.13), assetSize, canColor3, flameColor1, 255);
         }
     }
 
-
-    for (let raindrop of raindrops) {
-        raindrop.update(rainDropyOffset);
-        raindrop.display();
-    }
+    drawingRain(raindrops);
     // Update and display particles for explosion effect
     particleSystem.update();
     particleSystem.display();
 
+}
+
+function drawingRain(raindrops) {
+    for (let raindrop of raindrops) {
+        raindrop.update(rainDropyOffset);
+        raindrop.display();
+    }
 }
 
 function windowResized() {
