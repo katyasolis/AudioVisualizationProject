@@ -5,7 +5,7 @@ let mic, fft, volSenseSlider, numRaindropsSlider;
 let vol = 0.25;
 let normVol;
 let volSense = 100;
-let slideStep = 10;
+let slideStep = 5;
 let startAudio = false;
 let detectBeat = false;
 let detectBeat2 = false;
@@ -68,7 +68,7 @@ function setup() {
     backCanColor2 = color(15, 55, 80);
     backCanColor3 = color(310, 75, 80);
 
-    volSenseSlider = createSlider(0, 200, volSense, slideStep);
+    volSenseSlider = createSlider(0, 100, volSense, slideStep);
     volSenseSlider.position(10, height*0.02);
     //volSenseSlider.style('width', '400px');
     volSenseSlider.class('slider-volsense');
@@ -151,7 +151,7 @@ function draw() {
         // sliders 
         volSense = volSenseSlider.value();
         let targetNumRaindrops = numRaindropsSlider.value();
-        normVol = vol * volSense;
+        normVol = vol * (volSense * 1.5);
 
         // Calculate target positions based on volume
         //SYD: Changed this so it would scale to height of canvas

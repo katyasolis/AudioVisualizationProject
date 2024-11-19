@@ -5,7 +5,7 @@ class Raindrop {
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.color = color;
+        this.color = color;  // Store the color passed as argument
         this.alpha = alpha;
         this.oscillationSpeed = random(0.05, 0.2);
         this.oscillationOffset = random(TWO_PI);
@@ -13,7 +13,8 @@ class Raindrop {
 
     update(yOffset) {
         this.y += this.speed + yOffset;
-        //this.alpha = 128 + 127 * sin(this.oscillationSpeed * frameCount + this.oscillationOffset);
+
+        // Reset position if raindrop goes off-screen
         if (this.y > height) {
             this.y = 0;
             this.x = random(width);
@@ -23,8 +24,10 @@ class Raindrop {
     }
 
     display() {
-        noFill();
-        fill(hue(this.color), saturation(this.color), brightness(this.color), this.alpha/255);
+        // Check if `this.color` is a valid color; otherwise, set a default color
+        let displayColor = this.color instanceof p5.Color ? this.color : color(220, 90, 100);
+
+        fill(hue(displayColor), saturation(displayColor), brightness(displayColor), this.alpha / 255);
         noStroke();
         stroke('black');
         strokeWeight(1);

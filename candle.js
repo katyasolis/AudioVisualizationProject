@@ -4,11 +4,20 @@ function candle(x, y, size, flameHeight, color, flameColor, opacity) {
     canBase(x, y, w, h, color, opacity);
     canFlame(x, y - h/5, w / 2, flameHeight, flameColor, opacity);
 
-    // Trigger explosion when the interval switches
-    if (millis() - lastSwitchTime > switchInterval - 1000) {
-        particleSystem.addParticle(x, y - h / 5, size, flameColor);
-    }
+     // Trigger explosion with dynamic color sampling
+     if (millis() - lastSwitchTime > switchInterval - 1000) {
+        let sampledColor;
+        try {
+            // Safely sample the color at the flame's position
+            sampledColor = color(get(x, y - h / 5));
+        } catch (e) {
+            // Fallback color if sampling fails
+            console.warn("Color sampling failed, using default flameColor.");
+            sampledColor = flameColor;
+        }
 
+        particleSystem.addParticle(x, y - h / 5, size, sampledColor);
+    }
 }
 
 function canBase(x, y, w, h, color, opacity) {

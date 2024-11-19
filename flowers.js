@@ -18,10 +18,15 @@ class Particle {
 
     display() {
         noStroke();
-        fill(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.alpha);
+        fill(
+          hue(this.color),
+          saturation(this.color),
+          brightness(this.color),
+          this.alpha / 255
+        );
         ellipse(this.x, this.y, this.size / 20);
-    }
-
+      }
+      
     isFinished() {
         return this.alpha <= 0;
     }
