@@ -87,3 +87,7 @@
   cursor: pointer;
   box-sizing: border-box; /* Ensure border is included in the element's dimensions */
 }
+
+body{
+  overflow: hidden; /* Hide scroll bars */
+}
